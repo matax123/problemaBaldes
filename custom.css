@@ -1,0 +1,149 @@
+/*CSS RESETER*/
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+   ESTE RESETER TIENE UN ERROR CON LA SCROLLBAR EN LARAVEL, YA QUE EL TEXTO SE VUELVE MÁS GRANDE DE LO QUE ESPERABAN, ASÍ QUE HAY QUE QUITARLE LOS ESTILOS A LOS FONT DENTRO DE HTML, BODY, ETC.
+*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  /* valores: arriba, derecha, abajo, izquierda */
+  padding: 0;
+  border: 0;
+}
+
+/* HTML5 display-role reset for older browsers */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/*CIERRA CSS RESETER*/
+
+.columna {
+  flex-direction: column;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.fila {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.fila-centro {
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.no-mostrar {
+  display: none;
+}
+
+.escondido {
+  display: hidden;
+}
+
+.inseleccionable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.texto {
+  color: rgb(189, 98, 36);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.titulo {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.texto-pequeño {
+  font-size: 16px;
+}
+
+.texto-mediano {
+  font-size: 18px;
+}
+
+.texto-grande {
+  font-size: 30px;
+}
+
+.barraTexto {
+  background-color: rgb(195, 195, 195);
+  border-color: rgb(100, 136, 180);
+  color: black;
+}
+
+.boton {
+  background-color: rgb(100, 136, 180);
+  border-color: blue;
+  color: white;
+}
+
+.centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.texto-centro {
+  text-align: center;
+}
+
+#recordar {
+  font-size: 18.5px;
+}
+
+.inputFile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
