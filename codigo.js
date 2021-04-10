@@ -1,8 +1,19 @@
+var output = document.getElementById("output");
+output.innerHTML = "Ingrese cantidad de baldes";
+var input = document.getElementById("input");
+var respuesta = document.getElementById("respuesta");
+input.value = "2";
 var botón = document.getElementById("botón");
-botón.onclick = function (){
-    botón.style.display = "none";
-    iniciar();
+botón.onclick = function () {
+    siguiente(input.value);
 }
+var contador = 0;
+var contadorCiclos = 0;
+
+var cantidadBaldes = 2;
+var estadoInicial = [0, 0];
+var capacidades = [5, 3];
+var estadosObjetivo = [[4, 0], [4, 3]];
 
 class Balde {
     constructor(id, capacidad, estadoActual) {
@@ -11,11 +22,6 @@ class Balde {
         this.estadoActual = estadoActual;
     }
 }
-
-var cantidadBaldes = 2;
-var estadoInicial = [0, 0];
-var capacidades = [5, 3];
-var estadosObjetivo = [[4, 0], [4, 3]];
 
 var balde0 = new Balde(0, capacidades[0], estadoInicial[0]);
 var balde1 = new Balde(1, capacidades[1], estadoInicial[1]);
@@ -70,6 +76,47 @@ class Nodo {
             return false; //no se pudo traspasar agua
         }
     }
+}
+
+function siguiente(input) {
+    if (contador == 0) {
+        if (isNumeric(input)) {
+            var número = parseInt(input);
+            if (número >= 2 && número <= 10) {
+                contador = 1;
+                output.innerHTML = "Ingrese la capacidad del balde " + contadorCiclos;
+                respuesta.innerHTML = "";
+            }
+            else {
+                respuesta.innerHTML = "Por favor ingrese un número del 2 al 10";
+            }
+        }
+        else {
+            respuesta.innerHTML = "Por favor ingrese un número";
+        }
+        return;
+    }
+    if(contador==1){
+        if (isNumeric(input)) {
+            var número = parseInt(input);
+            if (número >= 2 && número <= 10) {
+                contador = 1;
+                output.innerHTML = "Ingrese la capacidad del balde " + contadorCiclos;
+                respuesta.innerHTML = "";
+            }
+            else {
+                respuesta.innerHTML = "Por favor ingrese un número del 2 al 10";
+            }
+        }
+        else {
+            respuesta.innerHTML = "Por favor ingrese un número";
+        }
+        return;
+    }
+}
+
+function isNumeric(num) {
+    return !isNaN(num)
 }
 
 function iniciar() {
