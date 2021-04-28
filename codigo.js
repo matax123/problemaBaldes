@@ -6,26 +6,27 @@ input.value = "2";
 var botón = document.getElementById("botón");
 botón.onclick = function () {
     siguiente(input.value);
+    input.value = "";
 }
 var contador = 0;
 var contadorCiclos = 0;
 
-var cantidadBaldes = 2;
+
+var cantidadBaldes;
 var estadoInicial = [0, 0];
 var capacidades = [5, 3];
 var estadosObjetivo = [[4, 0], [4, 3]];
 
+var baldes = [];
+
+
 class Balde {
-    constructor(id, capacidad, estadoActual) {
+    constructor(id) {
         this.id = id;
-        this.capacidad = capacidad;
-        this.estadoActual = estadoActual;
+        this.capacidad;
+        this.estadoActual;
     }
 }
-
-var balde0 = new Balde(0, capacidades[0], estadoInicial[0]);
-var balde1 = new Balde(1, capacidades[1], estadoInicial[1]);
-var baldes = [balde0, balde1];
 
 class Nodo {
     constructor(estado, nodoPadre) {
@@ -78,14 +79,21 @@ class Nodo {
     }
 }
 
-function siguiente(input) {
-    if (contador == 0) {
+
+async function siguiente(input) {
+    if (contador == 0) {//se pide ingresar cantidad de baldes
         if (isNumeric(input)) {
             var número = parseInt(input);
             if (número >= 2 && número <= 10) {
-                contador = 1;
+                contador = 1; //se pasa al siguiente estado
+                cantidadBaldes = número;
                 output.innerHTML = "Ingrese la capacidad del balde " + contadorCiclos;
+                input.value = "0";
                 respuesta.innerHTML = "";
+                for (var i = 0; i < cantidadBaldes; i++) {
+                    var balde = new Balde(i);
+                    baldes.push(balde);
+                }
             }
             else {
                 respuesta.innerHTML = "Por favor ingrese un número del 2 al 10";
@@ -96,22 +104,104 @@ function siguiente(input) {
         }
         return;
     }
-    if(contador==1){
+    if (contador == 1) { //se pide la capacidad de cada balde
         if (isNumeric(input)) {
             var número = parseInt(input);
-            if (número >= 2 && número <= 10) {
-                contador = 1;
-                output.innerHTML = "Ingrese la capacidad del balde " + contadorCiclos;
-                respuesta.innerHTML = "";
+            if (número > 1) {
+                baldes[contadorCiclos].capacidad = número;
+                contadorCiclos++;
+                if (contadorCiclos == cantidadBaldes) {
+                    contador = 2;//se pasa al siguente estado
+                    contadorCiclos = 0;
+                    output.innerHTML = "Ingrese el estado inicial del balde "+contadorCiclos;
+                    respuesta.innerHTML = "";
+                }
+                else{
+                    output.innerHTML = "Ingrese la capacidad del balde " + contadorCiclos;
+                    respuesta.innerHTML = "";
+                }
             }
             else {
-                respuesta.innerHTML = "Por favor ingrese un número del 2 al 10";
+                respuesta.innerHTML = "Por favor ingrese un número mayor a 0";
             }
         }
         else {
             respuesta.innerHTML = "Por favor ingrese un número";
         }
         return;
+    }
+    if (contador == 2) {//se pide el estado inicial de cada balde
+        if (isNumeric(input)) {
+            var número = parseInt(input);
+            if (número >= 0) {
+                if(número > baldes[contadorCiclos].capacidad){//el estado inicial no puede ser mayor a la capacidad
+                    respuesta.innerHTML = "El estado inicial no puede ser mayor a la capacidad del balde";
+                    return;
+                }
+                estadoInicial[contadorCiclos] = número;
+                contadorCiclos++;
+                if (contadorCiclos == cantidadBaldes) {
+                    contador = 3;//se pasa al siguente estado
+                    contadorCiclos = 0;
+                    output.innerHTML = "Ingrese el estado objetivo del balde "+contadorCiclos;
+                    respuesta.innerHTML = "";
+                }
+                else{
+                    output.innerHTML = "Ingrese el estado inicial del balde "+contadorCiclos;
+                    respuesta.innerHTML = "";
+                }
+            }
+            else {
+                respuesta.innerHTML = "No puede ingresar un número menor a 0";
+            }
+        }
+        else {
+            respuesta.innerHTML = "Por favor ingrese un número";
+        }
+        return;
+    }
+    if(contador == 3){//se pide el estado objetivo de cada balde
+        if (isNumeric(input)) {
+            var número = parseInt(input);
+            if (número >= 0) {
+                if(número > baldes[contadorCiclos].capacidad){//el estado inicial no puede ser mayor a la capacidad
+                    respuesta.innerHTML = "El estado objetivo no puede ser mayor a la capacidad del balde";
+                    return;
+                }
+                estadosObjetivo[contadorCiclos] = número;
+                contadorCiclos++;
+                if (contadorCiclos == cantidadBaldes) {
+                    contador = 4;//se pasa al siguente estado
+                    contadorCiclos = 0;
+                    document.getElementById("input").style.display="none";
+                    output.innerHTML = "Pulse siguiente para iniciar la búsqueda";
+                    respuesta.innerHTML = "";
+                }
+                else{
+                    output.innerHTML = "Ingrese el estado objetivo del balde "+contadorCiclos;
+                    respuesta.innerHTML = "";
+                }
+            }
+            else {
+                respuesta.innerHTML = "No puede ingresar un número menor a 0";
+            }
+        }
+        else {
+            respuesta.innerHTML = "Por favor ingrese un número";
+        }
+        return;
+    }
+    if(contador == 4){//inicia la búsqueda
+        output.innerHTML = "Búsqueda iniciada";
+        respuesta.innerHTML = "";
+        botón.style.display="none";
+        await iniciar();
+        if(soluciónEncontrada){
+            respuesta.innerHTML = "Se encontrarón una o más soluciones";
+        }
+        else{
+            respuesta.innerHTML = "No hay solución";
+        }
     }
 }
 
@@ -123,6 +213,8 @@ function iniciar() {
     var raíz = new Nodo(estadoInicial, null);
     algoritmo(raíz);
 }
+
+var soluciónEncontrada = false;
 
 function algoritmo(nodoActual) {
     for (i = 0; i < cantidadBaldes; i++) {
@@ -138,6 +230,7 @@ function algoritmo(nodoActual) {
             if (estadoObjetivo(nuevoNodo.estado)) {
                 nuevoNodo.solución = true;
                 mostrarSolución(nuevoNodo);
+                soluciónEncontrada = true;
                 return;
             }
         }
@@ -153,7 +246,8 @@ function algoritmo(nodoActual) {
             if (estadoObjetivo(nuevoNodo.estado)) {
                 nuevoNodo.solución = true;
                 mostrarSolución(nuevoNodo);
-                return;
+                soluciónEncontrada = true;
+                return true;
             }
         }
         for (ii = 0; ii < cantidadBaldes - 1 - i; ii++) {//posibles combinaciones entre todos los baldes (orden importa)
@@ -168,7 +262,8 @@ function algoritmo(nodoActual) {
                 if (estadoObjetivo(nuevoNodo.estado)) {
                     nuevoNodo.solución = true;
                     mostrarSolución(nuevoNodo);
-                    return;
+                    soluciónEncontrada = true;
+                    return true;
                 }
             }
             var nuevoNodo = new Nodo(null, null);
@@ -182,7 +277,8 @@ function algoritmo(nodoActual) {
                 if (estadoObjetivo(nuevoNodo.estado)) {
                     nuevoNodo.solución = true;
                     mostrarSolución(nuevoNodo);
-                    return;
+                    soluciónEncontrada = true;
+                    return true;
                 }
             }
         }
@@ -190,14 +286,17 @@ function algoritmo(nodoActual) {
     nodoActual.hijos.forEach(nodoHijo => {
         algoritmo(nodoHijo);
     });
+    return false;
 }
 
 function estadoObjetivo(estado) {
     for (var i = 0; i < estadosObjetivo.length; i++) {
-        if (estado[0] == estadosObjetivo[i][0] && estado[1] == estadosObjetivo[i][1]) {
+        if (estado[0] == estadosObjetivo[0] && estado[1] == estadosObjetivo[1]) {
+            console.log("estadoObjetivo=true");
             return true;
         }
     }
+    console.log("estadoObjetivo=false");
     return false;
 }
 
